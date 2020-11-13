@@ -1,0 +1,27 @@
+Para ejecutar programas se debe editar el siguiente documento:
+
+/home/pi/.config/lxsession/LXDE-pi/autostart
+
+Acá se ponen las rutas acompañadas de un "@" del script o programa:
+Ejemplo:
+
+*Si se quiere abrir un programa se debe añadir la línea
+@programa_a_abrir [comandos opcionales]
+
+*Si se quiere abrir un script sh:
+@/bin/bash [dirección_del_script.sh]
+
+Configuración hasta el momento dentro del archivo:
+
+
+@lxpanel --profile LXDE-pi
+@pxmanfm --desktop --profile LXDE-pi
+@xscreensaver -no-splash
+point-rpi
+
+@x11vnc -shared --forever
+@/bin/bash /home/pi/TvPost/noVNC/utils/launch.sh
+@/bin/bash /home/pi/TvPost/Bash_files/Screen_divitions_config/clear_screens.sh
+@python3 /home/pi/TvPost/Py_files/Screen_format/Formato_100.py
+@thonny /home/pi/TvPost/Py_files/Server_py/ServidorTvPost.py
+@unclutter -idle 5 -root

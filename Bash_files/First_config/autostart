@@ -1,0 +1,11 @@
+@lxpanel --profile LXDE-pi
+@pxmanfm --desktop --profile LXDE-pi
+@xscreensaver -no-splash
+point-rpi
+
+@x11vnc -shared --forever
+@/bin/bash /home/pi/TvPost/noVNC/utils/launch.sh
+@/bin/bash /home/pi/TvPost/Bash_files/Screen_divitions_config/clear_screens.sh
+@python3 /home/pi/TvPost/Py_files/Screen_format/Formato_100.py
+@thonny /home/pi/TvPost/Py_files/Server_py/ServidorTvPost.py
+@unclutter -idle 5 -root

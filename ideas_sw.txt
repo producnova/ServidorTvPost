@@ -1,0 +1,6 @@
+5.- Tratar de seleccionar el display a través de la aplicación y abrir
+los ejecutables en ese display específoc (para el streaming o las 
+imágenes). Quizás al darle el posicionamiento de ventana con coordenadas
+funcione. La aplicación tiene que abrirse al iniciar la Raspberry y 
+ocultar el menú de inicio para que solo se pueda acceder vía la app del
+celu o a través de un comando especial que desbloquee el teclaod y mouse
