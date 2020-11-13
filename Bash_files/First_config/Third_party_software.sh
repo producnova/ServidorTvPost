@@ -30,15 +30,6 @@ sudo apt-get install unclutter -y
 echo "------------------------------"
 echo "unclutter instalado correctamente"
 echo "------------------------------"
-sudo apt-get install x11vnc -y
-echo "------------------------------"
-echo "x11vnc instalado correctamente"
-echo "------------------------------"
-bash ~/TvPost/noVNC/utils/launch.sh
-xdotool key ctrl+c
-echo "------------------------------"
-echo "noVNC configurado correctamente"
-echo "------------------------------"
 cd ~/.config/
 sudo mkdir lxsession
 cd lxsession
@@ -53,6 +44,13 @@ sh ventz-media-pi
 echo "------------------------------"
 echo "Chromium Media Edition instalado correctamente"
 echo "------------------------------"
+sudo apt-get install x11vnc -y
+echo "------------------------------"
+echo "x11vnc instalado correctamente"
+echo "------------------------------"
+bash ~/TvPost/noVNC/utils/launch.sh
+echo "------------------------------"
+echo "noVNC configurado correctamente"
 echo "------------------------------"
 echo "Software de terceros instalados correctamente"
 echo "------------------------------"
