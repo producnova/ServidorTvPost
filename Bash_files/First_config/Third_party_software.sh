@@ -49,8 +49,6 @@ echo "------------------------------"
 echo "x11vnc instalado correctamente"
 echo "------------------------------"
 sudo bash ~/TvPost/noVNC/utils/launch.sh
-xdotool key ctrl+c & xdotool key ctrl+alt+t
-sleep 3
 echo "------------------------------"
 echo "noVNC configurado correctamente"
 echo "------------------------------"
