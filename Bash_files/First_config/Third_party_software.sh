@@ -48,7 +48,7 @@ sudo apt-get install x11vnc -y
 echo "------------------------------"
 echo "x11vnc instalado correctamente"
 echo "------------------------------"
-bash ~/TvPost/noVNC/utils/launch.sh
+sudo bash ~/TvPost/noVNC/utils/launch.sh
 echo "------------------------------"
 echo "noVNC configurado correctamente"
 echo "------------------------------"

@@ -1,7 +1,0 @@
-layout,1
-tipoArchivo1,ReproductorVideos
-tipoArchivo2,0
-tipoArchivo3,0
-archivo1,/VideosPostTv/1.mp4
-archivo2,0
-archivo3,0
