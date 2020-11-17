@@ -1,6 +1,10 @@
 #!/bin/sh
 
 file_in_screen_1="$1"
+#reloj_activado=0
+#if [[ $file_in_screen_1 == *"add_TvPostReloj"* ]]; then
+	#file_in_screen_1=$( bash /home/pi/TvPost/Bash_files/Screen_divitions_files/reloj_cut_text.sh "${file_in_screen_1}" )
+#fi
 
 file_type=$( bash /home/pi/TvPost/Bash_files/Screen_divitions_files/regex_file.sh "${file_in_screen_1}" )
 

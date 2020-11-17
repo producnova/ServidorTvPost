@@ -35,13 +35,15 @@ class ClientThread(threading.Thread):
             layout = "2"
         if (ArregloDatos[1] == '802010'):
             layout = "3"
+        porcionACambiar = ArregloDatos[2]
         tipoArchivo1 = ArregloDatos[3]
         tipoArchivo2 = ArregloDatos[4]
         tipoArchivo3 = ArregloDatos[5]
         archivo1 = ArregloDatos[6]
         archivo2 = ArregloDatos[7]
         archivo3 = ArregloDatos[8]
-        porcionACambiar = ArregloDatos[2]
+        relojEnPantalla = ArregloDatos[9]
+        
         if (porcionACambiar == "null"):
             #Preguntar que layout viene para mantener cierta porcion
             #layout 100 mantiene archivo izquierda
@@ -123,7 +125,7 @@ class ClientThread(threading.Thread):
             for archivo in listadoArchivosUtilizar:
                 print("Archivo: " + archivo)
                 archivoBash += ' ' + archivo
-            
+            archivoBash += ' ' + relojEnPantalla
             print("Instruccion al cambiar: " + archivoBash)
             os.system(archivoBash)
             print('OK!')
@@ -148,6 +150,7 @@ class ClientThread(threading.Thread):
         archivo1 = ArregloDatos[6]
         archivo2 = ArregloDatos[7]
         archivo3 = ArregloDatos[8]
+        relojEnPantalla = ArregloDatos[9]
         
         #Crea archivo de datos de reproduccion actual
         try:
@@ -176,10 +179,11 @@ class ClientThread(threading.Thread):
                 f.write("tipoArchivo3," + tipoArchivo3 + "\n")
                 f.write("archivo1," + archivo1 + "\n")
                 f.write("archivo2," + archivo2 + "\n")
-                f.write("archivo3," + archivo3)
+                f.write("archivo3," + archivo3 + "\n")
+                f.write("relojEnPantalla," + relojEnPantalla)
                 
         except:
-            print('Error al crear archivo datos reprroducicon')
+            print('Error al crear archivo datos reproducción')
         
     def CambioLayout(self,layout):
     #Cambio de porción solo si es distinto

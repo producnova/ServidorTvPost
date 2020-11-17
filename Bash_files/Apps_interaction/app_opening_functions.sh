@@ -61,20 +61,23 @@ select_screen="$1"
 file_in_screen_1="$2"
 file_in_screen_2="$3"
 file_in_screen_3="$4"
-
+activar_reloj="${@: -1}"
+echo "Activar Reloj llegó con: $activar_reloj"
 active_window_1=""
 active_window_2=""
 active_window_3=""
+reloj=""
+
 #Read the file
 if [ -f ~/TvPost/Resolutions/window_id.txt ]; then
-	regex_window_id='([0-9]?:?[0-9]+)?-?\s?([0-9]?\:?[0-9]+)?-?\s?([0-9]?\:?[0-9]+)?-?'
+	regex_window_id='([0-9]?:?[0-9]+)?-?\s?([0-9]?\:?[0-9]+)?-?\s?([0-9]?:?[0-9]+)?-?\s?([0-9]?\:?[0-9]+)?-?'
 	active_window_file=$(echo $(<~/TvPost/Resolutions/window_id.txt))
 	
 	[[ $active_window_file =~ $regex_window_id ]]
 	
 	#Assign the correct active window to variable
 	i=1
-	while [ $i -le 3 ]; do
+	while [ $i -le 4 ]; do
 		if [[ "${BASH_REMATCH[i]}" == *"1:"* ]]; then
 			complete_string="${BASH_REMATCH[i]}"
 			active_window_1="${complete_string:2}"
@@ -87,12 +90,17 @@ if [ -f ~/TvPost/Resolutions/window_id.txt ]; then
 			complete_string="${BASH_REMATCH[i]}"
 			active_window_3="${complete_string:2}"
 		fi
+		if [[ "${BASH_REMATCH[i]}" == *"4:"* ]]; then
+			complete_string="${BASH_REMATCH[i]}"
+			reloj="${complete_string:2}"
+		fi
 		i=$(( i + 1 ))
 	done
 	
 	echo "active 1:"${active_window_1}
 	echo "active 2:"${active_window_2}
 	echo "active 3:"${active_window_3}
+	echo "reloj 4:"${reloj}
 fi
 
 
@@ -140,6 +148,20 @@ function kill_app_bottom_corner() {
 	fi 
 }
 
+function kill_reloj() {
+		#Kill any app in that window
+	if [[ ! -z ${reloj} ]]; then
+		echo "killing reloj: "${reloj} &&
+		#xdotool windowactivate ${active_window_3}
+		#xdotool windowactivate ${active_window_3} key alt+F4;
+		wmctrl -ic ${reloj};
+		sudo grep -rv '4:' ~/TvPost/Resolutions/window_id.txt >> ~/TvPost/Resolutions/window_id_temp.txt;
+		#sudo rm ~/TvPost/Resolutions/window_id.txt
+		sudo mv ~/TvPost/Resolutions/window_id_temp.txt ~/TvPost/Resolutions/window_id.txt;
+		return;
+	fi 
+}
+
 
 function left_screen() {
 	
@@ -147,7 +169,7 @@ function left_screen() {
 	kill_app_left_corner;
 	
 	sleep 3;
-	
+
 	#Sends info file to file opener
 	bash ~/TvPost/Bash_files/Screen_divitions_files/left_portion_file.sh ${file_in_screen_1};
 	return;
@@ -252,6 +274,27 @@ function change_left_right_and_bottom_screens() {
 	return
 }
 
+function digital_clock(){
+	#Gets the value from argument
+	if [ $activar_reloj == "on" ]
+	then
+		if [[ -z ${reloj} ]]
+		then
+			#Llamar a la función que abre el reloj
+			bash /home/pi/TvPost/Bash_files/Apps_interaction/clock.sh
+		else
+			#Lo trae alfrente si está ya abierto
+			sleep 5
+			xdotool windowactivate ${reloj}
+		fi
+	else
+		if [[ ! -z ${reloj} ]]
+		then
+			kill_reloj
+		fi
+	fi
+}
+
 #Validate that 'select_screen' is available in the resolutions
 #1 Screen
 if [ $select_screen == "1-1" ] 
@@ -269,6 +312,9 @@ then
 	fi
 
 	echo "Cambiando pantalla 1"
+	#Kills the clock
+	kill_reloj
+	
 	left_screen
 
 	kill_app_right_corner;
@@ -289,6 +335,8 @@ then
 
 	sleep 1;
 	echo "Cambiando pantalla 2-1"
+	#Kills the clock
+	kill_reloj
 	left_screen
 	
 	kill_app_bottom_corner;
@@ -305,6 +353,8 @@ then
 	
 	sleep 1;
 	echo "Cambiando pantalla 2-2"
+	#Kills the clock
+	kill_reloj
 	right_screen
 	
 	kill_app_bottom_corner;
@@ -322,6 +372,8 @@ then
 	sleep 1;
 	#Change both screens
 	echo "Cambiando pantalla 2-3"
+	#Kills the clock
+	kill_reloj
 	change_left_and_right_screens;
 	
 	kill_app_bottom_corner;
@@ -334,7 +386,11 @@ if [ $select_screen == "3-1" ]
 then
 	#Change the left screen
 	echo "Cambiando pantalla 3-1"
+	
 	left_screen;
+	
+	digital_clock;
+	
 	exit
 fi
 
@@ -343,7 +399,11 @@ if [ $select_screen == "3-2" ]
 then
 	#Change the right screen
 	echo "Cambiando pantalla 3-2"
+	
 	right_screen;
+	
+	digital_clock;
+	
 	exit
 fi
 
@@ -362,7 +422,11 @@ then
 
 	#Change the bottom screen
 	echo "Cambiando pantalla 3-3"
+	
 	bottom_screen;
+	
+	digital_clock;
+	
 	exit
 fi
 
@@ -371,7 +435,11 @@ if [ $select_screen == "3-4" ]
 then
 	#Change 3 screens
 	echo "Cambiando pantalla 3-4"
+	
 	change_left_right_and_bottom_screens
+	
+	digital_clock;
+	
 	exit
 fi
 
@@ -381,7 +449,11 @@ then
 	
 	#Change both screens
 	echo "Cambiando pantalla 3-5"
+	
 	change_left_and_right_screens
+	
+	digital_clock;
+	
 	exit
 fi
 
@@ -391,7 +463,11 @@ then
 	
 	#Change both screens
 	echo "Cambiando pantalla 3-6"
+	
 	change_right_and_bottom
+	
+	digital_clock;
+	
 	exit
 
 fi
@@ -402,7 +478,11 @@ then
 	
 	#both screens
 	echo "Cambiando pantalla 3-7"
+	
 	change_left_and_bottom
+	
+	digital_clock;
+	
 	exit
 
 fi
@@ -425,12 +505,18 @@ then
 		xdotool windowminimize ${active_window_3}
 	fi
 	
+	#minimize other apps
+	if [[ ! -z ${reloj} ]]; then
+		xdotool windowminimize ${reloj}
+	fi 
+	
 	#It changes format after manipulating opened apps
 	python3 ~/TvPost/Py_files/Screen_format/Formato_100.py
 	
 	#kill other apps
 	kill_app_right_corner;
 	kill_app_bottom_corner;
+	kill_reloj;
 fi
 
 if [ $select_screen == "mantener2" ]
@@ -445,6 +531,11 @@ then
 	#minimize other apps
 	if [[ ! -z ${active_window_2} ]]; then
 		xdotool windowminimize ${active_window_2}
+	fi 
+	
+	#minimize other apps
+	if [[ ! -z ${reloj} ]]; then
+		xdotool windowminimize ${reloj}
 	fi 
 
 
@@ -462,6 +553,8 @@ then
 	
 	#kill other apps
 	kill_app_bottom_corner;
+	
+	kill_reloj;
 	
 fi
 
@@ -484,5 +577,7 @@ then
 		xdotool windowmove $active_window_2 $(( ${width_1} + 1 )) 0;
 		xdotool windowactivate $active_window_2
 	fi 
+	
+	digital_clock;
 
 fi
