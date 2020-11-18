@@ -18,11 +18,14 @@ class Window(QWidget):
         
         self.color_fondo = 'white'
         self.color_letras = 'black'
-        if len(sys.argv) == 2:
+        if len(sys.argv) == 2 and sys.argv[1] != "":
             self.color_fondo = sys.argv[1]
-        if len(sys.argv) == 3:
+        if len(sys.argv) == 3 and sys.argv[1] != "" and sys.argv[2] != "":
             self.color_fondo = sys.argv[1]
             self.color_letras = sys.argv[2]
+        
+        #print("Color del fondo en py: {}".format(self.color_fondo))
+        
         #Cambia color del fondo
         self.setStyleSheet("background-color: {}".format(self.color_fondo))
         self.setGeometry(int(self.x), int(self.y), int(self.ancho), int(self.alto))

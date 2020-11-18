@@ -61,10 +61,7 @@ class ClientThread(threading.Thread):
             #si se desea mantener, se cambio luego de manipular
             #las apps en el bash opening_apps
             self.CambioLayout(layout)
-            
-        #Se escriben los datos del archivo de repŕoduccion atual
-        self.CrearArchivoDatosReproduccion(ArregloDatos)
-        
+
         try:
 
             listadoArchivosUtilizar = []
@@ -131,6 +128,9 @@ class ClientThread(threading.Thread):
             print('OK!')
         except:
             return 'Error al crear archivo bash'
+        
+         #Se escriben los datos del archivo de repŕoduccion atual
+        self.CrearArchivoDatosReproduccion(ArregloDatos)
         
         return 'Ok, vea sus pantallas'
     

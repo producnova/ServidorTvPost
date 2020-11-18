@@ -276,23 +276,85 @@ function change_left_right_and_bottom_screens() {
 
 function digital_clock(){
 	#Gets the value from argument
-	if [ $activar_reloj == "on" ]
+	if [[ $activar_reloj == *"on"* ]]
 	then
 		if [[ -z ${reloj} ]]
 		then
+			echo "Nuevo reloj"
+			#Se descompone el string para obtener colores
+			color_fondo="white"
+			color_letras="black"
+			
+			regex='(#[A-Z]?+[A-Z0-9]+)(#[A-Z]?+[A-Z0-9]+)'
+
+			if [[ "${activar_reloj}" =~ ${regex} ]]; then
+				color_fondo="${BASH_REMATCH[1]}"
+				color_letras="${BASH_REMATCH[2]}"
+			fi
+
+			#echo "fondo: $color_fondo"
+			#echo "letras: $color_letras"
 			#Llamar a la función que abre el reloj
-			bash /home/pi/TvPost/Bash_files/Apps_interaction/clock.sh
+			bash /home/pi/TvPost/Bash_files/Apps_interaction/clock.sh "${color_fondo}" "${color_letras}"
 		else
-			#Lo trae alfrente si está ya abierto
-			sleep 5
-			xdotool windowactivate ${reloj}
+			#Se descompone el string para obtener colores
+			color_fondo="white"
+			color_letras="black"
+			color_fondo_antiguo="white"
+			color_letras_antiguo="black"
+			
+			regex='(#[A-Z]?+[A-Z0-9]+)(#[A-Z]?+[A-Z0-9]+)'
+
+			if [[ "${activar_reloj}" =~ ${regex} ]]; then
+				color_fondo="${BASH_REMATCH[1]}"
+				color_letras="${BASH_REMATCH[2]}"
+			fi
+
+			if [ -f ~/TvPost/Resolutions/datos_reproduccion.txt ]; 
+			then
+
+				datos_actuales_reloj=$(echo $(<~/TvPost/Resolutions/datos_reproduccion.txt))
+				#echo $datos_actuales_reloj
+				if [[ "$datos_actuales_reloj" =~ ${regex} ]]; 
+				then
+
+					color_fondo_antiguo="${BASH_REMATCH[1]}"
+					color_letras_antiguo="${BASH_REMATCH[2]}"
+					
+					#~ echo "Color antiguo fondo: ${color_fondo_antiguo}"
+					#~ echo "Color antigua letras: ${color_letras_antiguo}"
+					#~ echo "Color nuevo fondo: ${color_fondo}"
+					#~ echo "Color nuevo letras: ${color_letras}"
+					
+					if [[ ${color_fondo} != ${color_fondo_antiguo} ]] || [[ ${color_letras} != ${color_letras_antiguo} ]]
+					then
+						#echo "Reemplaza reloj"
+						kill_reloj
+						#Llamar a la función que abre el reloj
+						bash /home/pi/TvPost/Bash_files/Apps_interaction/clock.sh "${color_fondo}" "${color_letras}"
+					else
+						#Lo trae alfrente si está ya abierto
+						sleep 5
+						xdotool windowactivate ${reloj}
+					fi
+				fi
+			else
+				#Lo trae alfrente si está ya abierto
+				sleep 5
+				xdotool windowactivate ${reloj}
+			fi
 		fi
-	else
+		return
+	fi
+
+	if [[ $activar_reloj == *"off"* ]]
+	then
 		if [[ ! -z ${reloj} ]]
 		then
 			kill_reloj
+			return
 		fi
-	fi
+	fi	
 }
 
 #Validate that 'select_screen' is available in the resolutions
