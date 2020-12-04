@@ -121,7 +121,7 @@ class ClientThread(threading.Thread):
             archivoBash += ' ' + porcionACambiar
             for archivo in listadoArchivosUtilizar:
                 print("Archivo: " + archivo)
-                archivoBash += ' ' + archivo
+                archivoBash += " '" + archivo + "'"
             archivoBash += ' ' + relojEnPantalla
             print("Instruccion al cambiar: " + archivoBash)
             os.system(archivoBash)
@@ -151,6 +151,10 @@ class ClientThread(threading.Thread):
         archivo2 = ArregloDatos[7]
         archivo3 = ArregloDatos[8]
         relojEnPantalla = ArregloDatos[9]
+        
+        archivo1 = archivo1.replace('<!-!>', ' ')
+        archivo2 = archivo2.replace('<!-!>', ' ')
+        archivo3 = archivo3.replace('<!-!>', ' ')
         
         #Crea archivo de datos de reproduccion actual
         try:

@@ -58,9 +58,12 @@ function widths_heights(){
 #3-7 [File_screen_1] [File_screen_3] (Change screen 1 and 3)
 
 select_screen="$1"
-file_in_screen_1="$2"
-file_in_screen_2="$3"
-file_in_screen_3="$4"
+file_in_screen_1="${2//<!-!>/ }"
+echo ${file_in_screen_1}
+file_in_screen_2="${3//<!-!>/ }"
+echo ${file_in_screen_2}
+file_in_screen_3="${4//<!-!>/ }"
+echo ${file_in_screen_3}
 activar_reloj="${@: -1}"
 echo "Activar Reloj llegó con: $activar_reloj"
 active_window_1=""
@@ -171,7 +174,7 @@ function left_screen() {
 	sleep 3;
 
 	#Sends info file to file opener
-	bash ~/TvPost/Bash_files/Screen_divitions_files/left_portion_file.sh ${file_in_screen_1};
+	bash ~/TvPost/Bash_files/Screen_divitions_files/left_portion_file.sh "${file_in_screen_1}";
 	return;
 	
 }
@@ -184,7 +187,7 @@ function right_screen() {
 	sleep 3;
 	
 	#Sends info file to file opener
-	bash ~/TvPost/Bash_files/Screen_divitions_files/right_portion_file.sh ${file_in_screen_1};
+	bash ~/TvPost/Bash_files/Screen_divitions_files/right_portion_file.sh "${file_in_screen_1}";
 	return;
 
 }
@@ -196,7 +199,7 @@ function right_screen_second_file() {
 	sleep 3;
 	
 	#Sends info file to file opener
-	bash ~/TvPost/Bash_files/Screen_divitions_files/right_portion_file.sh ${file_in_screen_2};
+	bash ~/TvPost/Bash_files/Screen_divitions_files/right_portion_file.sh "${file_in_screen_2}";
 	return;
 
 }
@@ -208,7 +211,7 @@ function bottom_screen() {
 	sleep 3;
 	
 	#Sends info file to file opener
-	bash ~/TvPost/Bash_files/Screen_divitions_files/bottom_portion_file.sh ${file_in_screen_1};
+	bash ~/TvPost/Bash_files/Screen_divitions_files/bottom_portion_file.sh "${file_in_screen_1}";
 	return;
 		
 }
@@ -220,7 +223,7 @@ function bottom_screen_second_file() {
 	sleep 3;
 	
 	#Sends info file to file opener
-	bash ~/TvPost/Bash_files/Screen_divitions_files/bottom_portion_file.sh ${file_in_screen_2};
+	bash ~/TvPost/Bash_files/Screen_divitions_files/bottom_portion_file.sh "${file_in_screen_2}";
 	return;
 	
 }
@@ -232,7 +235,7 @@ function bottom_screen_third_file() {
 	sleep 3;
 	
 	#Sends info file to file opener
-	bash ~/TvPost/Bash_files/Screen_divitions_files/bottom_portion_file.sh ${file_in_screen_3};
+	bash ~/TvPost/Bash_files/Screen_divitions_files/bottom_portion_file.sh "${file_in_screen_3}";
 	return;
 	
 }

@@ -17,34 +17,34 @@ regex_url_www='[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()
 
 file="$1"
 
-if [ ! -z ${file} ]
+if [ ! -z "${file}" ]
 then
 
-	if [[ ${file} =~ $regex_image_nopng ]]
+	if [[ "${file}" =~ $regex_image_nopng ]]
 	then
 		echo "image_nopng"
 		exit
 	fi
 	
-	if [[ ${file} =~ $regex_image_png ]]
+	if [[ "${file}" =~ $regex_image_png ]]
 	then
 		echo "image_png"
 		exit
 	fi
 	
-	if [[ ${file} =~ $regex_local_video ]]
+	if [[ "${file}" =~ $regex_local_video ]]
 	then
 		echo "local_video"
 		exit
 	fi
 	
-	if [[ ${file} =~ $regex_youtube ]]
+	if [[ "${file}" =~ $regex_youtube ]]
 	then
 		echo "online_youtube"
 		exit
 	fi
 	
-	if [[ ${file} =~ $regex_url_http_https ]] || [[ ${file} =~ $regex_url_www ]]
+	if [[ "${file}" =~ $regex_url_http_https ]] || [[ "${file}" =~ $regex_url_www ]]
 	then
 		echo "online_browser"
 		exit

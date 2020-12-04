@@ -17,7 +17,7 @@ if [ ${file_type} == "image_nopng" ]
 then
 	
 	#runs the app
-	viewnior $file_in_screen_1 &
+	viewnior "$file_in_screen_1" &
 	
 	#Check fore new apps
 	nueva_id=$( bash ~/TvPost/Bash_files/Apps_interaction/check_new_app_opened.sh )
@@ -39,7 +39,7 @@ if [ ${file_type} == "image_png" ]
 then
 	
 	#runs the app
-	gpicview $file_in_screen_1 &
+	gpicview "$file_in_screen_1" &
 	
 	#Check fore new apps
 	nueva_id=$( bash ~/TvPost/Bash_files/Apps_interaction/check_new_app_opened.sh )
@@ -61,7 +61,7 @@ if [ ${file_type} == "local_video" ]
 then
 
 	#runs the app
-	vlc -A alsa,none --alsa-audio-device default --repeat $file_in_screen_1 &
+	vlc -A alsa,none --alsa-audio-device default --repeat "$file_in_screen_1" &
 	
 	#Check fore new apps
 	nueva_id=$( bash ~/TvPost/Bash_files/Apps_interaction/check_new_app_opened.sh )
@@ -85,7 +85,7 @@ if [ ${file_type} == "online_youtube" ]
 then
 
 	#Opening and moving Chrome. Waiting seconds and go fullscreen
-	bash ~/TvPost/Bash_files/Apps_interaction/chromeos-browser.bash $file_in_screen_1 &
+	bash ~/TvPost/Bash_files/Apps_interaction/chromeos-browser.bash "$file_in_screen_1" &
 
 	#Check fore new apps
 	nueva_id=$( bash ~/TvPost/Bash_files/Apps_interaction/check_new_app_opened.sh )
@@ -107,7 +107,7 @@ if [ ${file_type} == "online_browser" ]
 then
 
 	#runs the app
-	bash ~/TvPost/Bash_files/Apps_interaction/chromeos-browser.bash $file_in_screen_1 &
+	bash ~/TvPost/Bash_files/Apps_interaction/chromeos-browser.bash "$file_in_screen_1" &
 	
 	#Check fore new apps
 	nueva_id=$( bash ~/TvPost/Bash_files/Apps_interaction/check_new_app_opened.sh )
