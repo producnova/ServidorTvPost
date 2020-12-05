@@ -1,10 +1,10 @@
 #!/bin/sh
 echo "----------------------------------------"
-echo "Actualizando..."
-sudo apt-get update && sudo apt-get upgrade -y;
-echo "----------------------------------------"
-echo "Actualización correcta"
-echo "----------------------------------------"
+#echo "Actualizando..."
+#sudo apt-get update && sudo apt-get upgrade -y;
+#echo "----------------------------------------"
+#echo "Actualización correcta"
+#echo "----------------------------------------"
 echo "Instalando Apache Server..."
 sudo apt-get install apache2 -y;
 echo "----------------------------------------"
