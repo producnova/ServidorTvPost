@@ -1,7 +1,7 @@
 #!/bin/sh
 echo "*****Descargando Repositorios*****"
 cd ~
-git clone --recurse-submodules -j8 https://github.com/producnova/TvPost
+git clone --recurse-submodules -j8 https://github.com/producnova/ServidorTvPost TvPost
 echo "*****Configurando Web Server*****"
 bash ~/TvPost/Bash_files/First_config/WebServer_TvPost.sh
 echo "*****Software de terceros*****"
