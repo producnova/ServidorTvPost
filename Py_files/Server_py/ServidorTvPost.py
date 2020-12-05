@@ -328,6 +328,26 @@ class ClientThread(threading.Thread):
         #conn.sendall("{}".encode())
 
         return 'Datos reproduccion enviados'
+    
+    def SizeBase(self,conn):
+        #va a buscar archivo con datos de reproduccion actual.
+        archivoDatosReprroduccion = "/home/pi/TvPost/Resolutions/base_resolution.txt"
+        d = {}
+        if (os.path.exists(archivoDatosReprroduccion)):
+            with open(archivoDatosReprroduccion) as f:
+                for line in f:
+                    if 'Width in pixels:-' in line:
+                        d['anchoPantalla'] = line[len('Width in pixels:-'):].strip()
+                    if 'Height in pixels:-' in line:
+                        d['altoPantalla'] = line[len('Height in pixels:-'):].strip()
+        #Acá debe retornar el diccionario
+        dTransformado = str(d)
+        dTransformado = dTransformado.replace("'", '"')
+        #print(dTransformado)
+        conn.sendall(dTransformado.encode())
+        #conn.sendall("{}".encode())
+
+        return 'Datos tamaño enviados'
 
     def run(self):
         #print("Conección desde: ", self.clientAddress)
@@ -396,12 +416,18 @@ class ClientThread(threading.Thread):
                 print(respuesta)
                 conn.close()
                 break
-            #Recibe video desde android
+
             elif command == 'TVPOSTGETDATOSREPRODUCCIONACTUAL':
                 respuesta = self.DatosReproduccionActual(conn)
                 print(respuesta)
                 conn.close()
-                return
+                break
+            
+            elif command == 'TVPOSTGETSIZEPANTALLA':
+                respuesta = self.SizeBase(conn)
+                print(respuesta)
+                conn.close()
+                break
 
 host = ""
 port = 5560
