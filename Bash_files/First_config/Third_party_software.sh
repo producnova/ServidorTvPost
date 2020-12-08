@@ -39,6 +39,7 @@ sudo cp /home/pi/TvPost/Bash_files/First_config/autostart .
 echo "------------------------------"
 echo "archivo autostart configurado correctamente"
 echo "------------------------------"
+cd ~
 curl -fsSL https://pi.vpetkov.net -o ventz-media-pi
 sh ventz-media-pi
 echo "------------------------------"
