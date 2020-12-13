@@ -9,10 +9,13 @@ class ClientThread(threading.Thread):
     clientAddress = '';
     conn = '';
     def __init__(self, address, clientSocket):
-        threading.Thread.__init__(self, name="hiloNuevo", target=ClientThread.run)
-        self.conn = clientSocket
-        self.clientAddress = address
-        print ("Nueva conexión con: ", self.clientAddress)
+        try:
+            threading.Thread.__init__(self, name="hiloNuevo", target=ClientThread.run)
+            self.conn = clientSocket
+            self.clientAddress = address
+            print ("Nueva conexión con: ", self.clientAddress)
+        except e as msg:
+            print("Error al crear clase hilo: "+str(msg))
     
     #Funciones que reciben y envían datos
     def ResponderPing(self):
@@ -362,72 +365,74 @@ class ClientThread(threading.Thread):
                 conn.send(bytes(reply,"UTF-8"))
                 print(reply)
                 conn.close()
-                break
+                return
             
-            elif command == 'TVPOSTRES':
+            if command == 'TVPOSTRES':
                 reply = self.CambiarResolucion(dataMessage[1], dataMessage[2])
                 conn.send(bytes(reply,"UTF-8"))
                 print(reply)
                 conn.close()
-                break
+                return
                
             elif command == 'TVPOSTMODLAYOUT':
                 reply = self.ModificarLayout(dataMessage)
                 conn.send(bytes(reply,"UTF-8"))
                 print(reply)
                 conn.close()
-                break
+                return
             
             elif command == 'TVPOSTGETSCREEN':
                 respuesta = self.CapturarPantalla(conn)
                 print(respuesta)
                 conn.close()
-                break
+                return
             
             elif command == 'TVPOSTCANTIDADIMAGENES':
                 respuesta = self.CantidadImagenes(conn)
                 print(respuesta)
                 conn.close()
-                break
+                return
             
             #Entrega el listado completo de nombres de imágenes
             elif command == 'TVPOSTGETNOMBREIMAGENES':
                 respuesta = self.NombresImagenes(conn)
                 print(respuesta)
                 conn.close()
-                break
+                return
             #Comprueba el nombre entrante para ver si existe y no
             #reemplazarlo
             elif 'TVPOSTVERIFICANOMBREIMAGEN' in command:
                 respuesta = self.VerificarNombreImagen(conn, dataMessage[1])
                 print(respuesta)
                 conn.close()
-                break
+                return
 
             #Entrega el listado completo de nombres de videos
             elif command == 'TVPOSTGETNOMBREVIDEOS':
                 respuesta = self.NombresVideos(conn)
                 print(respuesta)
                 conn.close()
-                break
+                return
             #Verifica nombre de video
             elif 'TVPOSTVERIFICANOMBREVIDEO' in command:
                 respuesta = self.VerificarNombreVideo(conn, dataMessage[1])
                 print(respuesta)
                 conn.close()
-                break
+                return
 
             elif command == 'TVPOSTGETDATOSREPRODUCCIONACTUAL':
                 respuesta = self.DatosReproduccionActual(conn)
                 print(respuesta)
                 conn.close()
-                break
+                return
             
             elif command == 'TVPOSTGETSIZEPANTALLA':
                 respuesta = self.SizeBase(conn)
                 print(respuesta)
                 conn.close()
-                break
+                return
+            
+        return
 
 host = ""
 port = 5560
@@ -447,8 +452,15 @@ try:
 except socket.error as msg:
     print("Error al bind el socket: "+str(msg))
     
-while True:
-    s.listen(5)
-    conn, address = s.accept()
-    newthread = ClientThread(address, conn)
-    newthread.start()
+try:
+    
+    while True:
+        try:
+            s.listen(5)
+            conn, address = s.accept()
+            newthread = ClientThread(address, conn)
+            newthread.start()
+        except e as msg:
+            print("Error al crear hilo: "+str(msg))
+except e as msg:
+            print("Error al iniciar loop: "+str(msg))
