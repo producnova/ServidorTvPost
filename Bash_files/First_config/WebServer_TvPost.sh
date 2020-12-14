@@ -22,16 +22,16 @@ sudo chown pi: /var/www/html/ImagenesPostTv;
 sudo chown pi: /var/www/html/VideosPostTv;
 sudo chown pi: /var/www/html/upload_one_image.php;
 sudo chown pi: /var/www/html/upload_one_video.php;
-sudo chmod 777 ImagenesPostTv
-sudo chmod 777 VideosPostTv
+sudo chmod 777 /var/www/html/ImagenesPostTv;
+sudo chmod 777 /var/www/html/VideosPostTv;
 echo "----------------------------------------"
 echo "Permisos otorgados correctamente"
 echo "----------------------------------------"
 echo "Instalando php..."
 sudo apt-get install php libapache2-mod-php -y;
-sudo sed -i 's+upload_max_filesize.*+upload_max_filesize = 10000M+g' etc/php/*/apache2/php.ini
+sudo sed -i 's+upload_max_filesize.*+upload_max_filesize = 10000M+g' /etc/php/*/apache2/php.ini;
 sleep 0.5
-sudo sed -i 's+post_max_size.*+post_max_size = 10000M+g' /etc/php/*/apache2/php.ini
+sudo sed -i 's+post_max_size.*+post_max_size = 10000M+g' /etc/php/*/apache2/php.ini;
 echo "----------------------------------------"
 echo "Php instalado correctamente"
 echo "----------------------------------------"
