@@ -12,6 +12,8 @@ then
 else
 	echo "*****Eliminando servidor TvPost anterior*****"
 	sudo rm -rf ~/TvPostAnterior
+	echo "*****Moviendo WebSockify*****"
+	sudo mv ~/TvPost/websockify ~/TvPost/noVNC/utils/
 	echo "*****Configurando Web Server*****"
 	bash ~/TvPost/Bash_files/First_config/WebServer_TvPost.sh
 	echo "*****Software de terceros*****"
