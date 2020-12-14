@@ -1,13 +1,17 @@
 #!/bin/sh
+echo "*****Renombrando servidor anterior*****"
+sudo mv ~/TvPost ~/TvPostAnterior
 echo "*****Descargando Repositorios*****"
 cd ~
 if ! git clone --recurse-submodules -j8 https://github.com/producnova/ServidorTvPost TvPost
 then
 	echo "***************************ERROR***********************************"
 	echo "Descarga de repositorio fallida.Revise la dirección del repositorio";
+	echo "*****Volviendo a versión anterior*****"
+	sudo mv ~/TvPostAnterior ~/TvPost
 else
 	echo "*****Eliminando servidor TvPost anterior*****"
-	sudo rm -rf ~/TvPost
+	sudo rm -rf ~/TvPostAnterior
 	echo "*****Configurando Web Server*****"
 	bash ~/TvPost/Bash_files/First_config/WebServer_TvPost.sh
 	echo "*****Software de terceros*****"
