@@ -49,7 +49,6 @@ sudo apt-get install x11vnc -y
 echo "------------------------------"
 echo "x11vnc instalado correctamente"
 echo "------------------------------"
-sudo sed -i 's/python/python3/g' ~/TvPost/noVNC/utils/websockify/run
 echo "------------------------------"
 echo "noVNC configurado correctamente"
 echo "------------------------------"
