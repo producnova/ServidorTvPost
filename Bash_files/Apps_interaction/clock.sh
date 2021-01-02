@@ -1,15 +1,12 @@
 #!/bin/sh
-
 color_fondo="$1"
 color_letras="$2"
-
-
 width_1=""
-height_1=""
+#height_1=""
 width_2=""
-height_2=""
-width_3=""
-height_3=""
+#height_2=""
+#width_3=""
+#height_3=""
 
 function widths_heights(){
 	regex='([0-9]):([0-9]+)x([0-9]+)'
@@ -28,7 +25,7 @@ function widths_heights(){
 		fi
 		
 		if [ ${BASH_REMATCH[1]} == 2 ]; then
-			width_2=${BASH_REMATCH[2]}
+			#width_2=${BASH_REMATCH[2]}
 			height_2=${BASH_REMATCH[3]}
 		fi
 		
