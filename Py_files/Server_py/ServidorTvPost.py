@@ -31,13 +31,6 @@ class ClientThread(threading.Thread):
         #la resolucion, sino, se mantiene
 
         #Datos que se escriben en el archivo para obtenerlos en el equipo móvil
-        layout = ""
-        if (ArregloDatos[1] == '100'):
-            layout = "1"
-        if (ArregloDatos[1] == '5050'):
-            layout = "2"
-        if (ArregloDatos[1] == '802010'):
-            layout = "3"
         porcionACambiar = ArregloDatos[2]
         tipoArchivo1 = ArregloDatos[3]
         tipoArchivo2 = ArregloDatos[4]
@@ -46,6 +39,16 @@ class ClientThread(threading.Thread):
         archivo2 = ArregloDatos[7]
         archivo3 = ArregloDatos[8]
         relojEnPantalla = ArregloDatos[9]
+        layout = ""
+        if (ArregloDatos[1] == '100'):
+            layout = "1"
+        if (ArregloDatos[1] == '5050'):
+            layout = "2"
+        if (ArregloDatos[1] == '802010' and relojEnPantalla[:relojEnPantalla.index('#')] == 'off' ):
+            layout = "3"
+        if (ArregloDatos[1] == '802010' and relojEnPantalla[:relojEnPantalla.index('#')] == 'on' ):
+            layout = "3reloj"
+        
         
         if (porcionACambiar == "null"):
             #Preguntar que layout viene para mantener cierta porcion
@@ -213,6 +216,9 @@ class ClientThread(threading.Thread):
                                 if layout == "3":
                                     if os.system('python3 ~/TvPost/Py_files/Screen_format/Formato_80_20_10.py'):
                                         os.wait()
+                                if layout == "3reloj":
+                                    if os.system('python3 ~/TvPost/Py_files/Screen_format/Formato_80_20_10_reloj.py'):
+                                        os.wait()
                             except:
                                 return 'Error al cambiar layout'
                         break
@@ -230,6 +236,9 @@ class ClientThread(threading.Thread):
                 if layout == "3":
                     if os.system('python3 ~/TvPost/Py_files/Screen_format/Formato_80_20_10.py'):
                         os.wait()
+                if layout == "3reloj":
+                                    if os.system('python3 ~/TvPost/Py_files/Screen_format/Formato_80_20_10_reloj.py'):
+                                        os.wait()
             except:
                 return 'Error al cambiar layout'
 
@@ -351,6 +360,18 @@ class ClientThread(threading.Thread):
         #conn.sendall("{}".encode())
 
         return 'Datos tamaño enviados'
+    
+    def DelImagenes(self, nombres):
+        os.system('cd /var/www/html/ImagenesPostTv && rm -f{}'.format(nombres))
+        return 'Imagenes eliminadas'
+    
+    def EditImagen(self, nombres):
+        nombre1 = nombres[1].replace('<!-!>', ' ')
+        nombre2 = nombres[2].replace('<!-!>', ' ')
+        #print(nombre1, nombre2)
+        os.system('cd /var/www/html/ImagenesPostTv && mv {} {}'.format(nombre1, nombre2))
+        return 'Imagen editada'
+        
 
     def run(self):
         #print("Conección desde: ", self.clientAddress)
@@ -428,6 +449,20 @@ class ClientThread(threading.Thread):
             
             elif command == 'TVPOSTGETSIZEPANTALLA':
                 respuesta = self.SizeBase(conn)
+                print(respuesta)
+                conn.close()
+                return
+            
+            elif command == 'TVPOSTDELIMGS':
+                respuesta = self.DelImagenes(data[data.find(' '):])
+                conn.send(bytes(respuesta,"UTF-8"))
+                print(respuesta)
+                conn.close()
+                return
+            
+            elif command == 'TVPOSTEDITIMGS':
+                respuesta = self.EditImagen(dataMessage)
+                conn.send(bytes(respuesta,"UTF-8"))
                 print(respuesta)
                 conn.close()
                 return

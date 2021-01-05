@@ -15,8 +15,7 @@ def check_amount_monitors():
 def formato_80_20_10():
     
         #Check that the base resolutions file exsits
-    os.system('python3 /home/pi/TvPost/Py_files/Screen_format/Screen_info.py')
-    
+    os.system('python3 /home/pi/TvPost/Py_files/Screen_format/Screen_info.py')    
     
     resolution_values=[]
     
@@ -41,7 +40,7 @@ def formato_80_20_10():
       #  print(value)
     #Gettin active monitors
     resolution_values.append(int(check_amount_monitors()))
-    os.system('bash ~/TvPost/Bash_files/Screen_divitions_config/80_20_10.sh {} {} {} {} {} {}'.format(resolution_values[0], resolution_values[1], resolution_values[2], resolution_values[3], resolution_values[4], resolution_values[5]))
+    os.system('bash ~/TvPost/Bash_files/Screen_divitions_config/80_20_10_reloj.sh {} {} {} {} {} {}'.format(resolution_values[0], resolution_values[1], resolution_values[2], resolution_values[3], resolution_values[4], resolution_values[5]))
     #print(resolution_values)
 
 formato_80_20_10()

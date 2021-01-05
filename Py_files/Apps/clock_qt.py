@@ -30,7 +30,8 @@ class Window(QWidget):
         self.setStyleSheet("background-color: {}".format(self.color_fondo))
         self.setGeometry(int(self.x), int(self.y), int(self.ancho), int(self.alto))
         #Tamaño de las letras de la mitad de la latura
-        font_size = int(self.alto) // 2
+        font_size = int(self.alto) //2
+        #font_size = 12
         
         #Contenedor que poseerá el label 
         layout = QVBoxLayout()
@@ -68,11 +69,16 @@ class Window(QWidget):
                     (key, val) = line.strip().split(":")
                     if key == "Screen 1":
                         y =  val[str(val).find("x")+1:]
+                        x =  val[:str(val).find("x")]
+                    if key == "Screen 2":
+                        ancho = int(val[:str(val).find("x")])
+                        #y =  val[str(val).find("x")+1:]
+                        #ancho = int(ancho)
                     if key == "Screen 3":
-                        ancho = val[:str(val).find("x")]
-                        ancho = int(int(ancho)*0.2)
+                        #ancho = val[:str(val).find("x")]
+                        #ancho = int(int(ancho)*0.2)
                         alto = val[str(val).find("x")+1:]
-                        x = int(val[:str(val).find("x")]) - ancho
+                        #x = int(val[:str(val).find("x")]) - ancho
             if ancho == "" or alto == "":
                 return "200", "70", 0, 0
             else:
