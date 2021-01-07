@@ -371,6 +371,17 @@ class ClientThread(threading.Thread):
         #print(nombre1, nombre2)
         os.system('cd /var/www/html/ImagenesPostTv && mv {} {}'.format(nombre1, nombre2))
         return 'Imagen editada'
+    
+    def DelVideos(self, nombres):
+        os.system('cd /var/www/html/VideosPostTv && rm -f{}'.format(nombres))
+        return 'Videos eliminados'
+    
+    def EditVideos(self, nombres):
+        nombre1 = nombres[1].replace('<!-!>', ' ')
+        nombre2 = nombres[2].replace('<!-!>', ' ')
+        #print(nombre1, nombre2)
+        os.system('cd /var/www/html/VideosPostTv && mv {} {}'.format(nombre1, nombre2))
+        return 'Video editado'
         
 
     def run(self):
@@ -462,6 +473,20 @@ class ClientThread(threading.Thread):
             
             elif command == 'TVPOSTEDITIMGS':
                 respuesta = self.EditImagen(dataMessage)
+                conn.send(bytes(respuesta,"UTF-8"))
+                print(respuesta)
+                conn.close()
+                return
+            
+            elif command == 'TVPOSTDELVIDEOS':
+                respuesta = self.DelVideos(data[data.find(' '):])
+                conn.send(bytes(respuesta,"UTF-8"))
+                print(respuesta)
+                conn.close()
+                return
+            
+            elif command == 'TVPOSTEDITVIDEOS':
+                respuesta = self.EditVideos(dataMessage)
                 conn.send(bytes(respuesta,"UTF-8"))
                 print(respuesta)
                 conn.close()
