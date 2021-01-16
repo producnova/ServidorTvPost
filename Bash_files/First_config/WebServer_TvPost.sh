@@ -13,15 +13,15 @@ echo "----------------------------------------"
 echo "Creando carpetas..."
 sudo cp -r ~/TvPost/WebServer/* /var/www/html/;
 sudo mkdir /var/www/html/ImagenesPostTv;
+sudo mkdir /var/www/html/ImagenesPostTv10;
 sudo mkdir /var/www/html/VideosPostTv;
-sudo mkdir /var/www/html/VideosPostTv10;
 echo "----------------------------------------"
 echo "Carpetas creadas correctamente"
 echo "----------------------------------------"
 echo "Otorgando permisos..."
 sudo chown pi: /var/www/html/ImagenesPostTv;
+sudo chown pi: /var/www/html/ImagenesPostTv10;
 sudo chown pi: /var/www/html/VideosPostTv;
-sudo chown pi: /var/www/html/VideosPostTv10;
 sudo chown pi: /var/www/html/upload_one_image.php;
 sudo chown pi: /var/www/html/upload_one_video.php;
 sudo chmod 777 /var/www/html/ImagenesPostTv;
