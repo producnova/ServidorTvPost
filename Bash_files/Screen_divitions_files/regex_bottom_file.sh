@@ -2,8 +2,8 @@
 
 #image matcher
 #Gives specific for bottom portion- problem with using viewnior
-regex_image_nopng='.*\/ImagenesPostTv\/.+\.(gif)'
-regex_image_png='.*\/ImagenesPostTv\/.+\.(jpg|png|jpeg)'
+regex_image_nopng='\/.+\.(gif)'
+regex_image_png='\/.+\.(jpg|png|jpeg)'
 
 #Local video matcher
 regex_local_video='.*\/VideosPostTv\/.*'

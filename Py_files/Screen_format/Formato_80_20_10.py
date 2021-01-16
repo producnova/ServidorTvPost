@@ -1,6 +1,7 @@
 import os
 import subprocess
 import re
+import math
 
 #list of User folders
 usr = os.listdir("/home")
@@ -11,6 +12,12 @@ def check_amount_monitors():
                           capture_output=True,
                           text=True)
     return info.stdout
+
+
+def normal_round(n):
+    if n - math.floor(n) < 0.5:
+        return math.floor(n)
+    return math.ceil(n)
 
 def formato_80_20_10():
     
@@ -35,13 +42,45 @@ def formato_80_20_10():
     #$2 = width in mm
     #$3 = height in pixels
     #$4 = height in mm
-    #$5 = video adapter name
-    #$6 = amount of active monitors (Split screen already selected and functioning)
+    #$5 = width in pixels 80
+    #$6 = width in mm 80
+    #$7 = height in pixels 80
+    #$8 = width in mm
+    #$9 = video adapter name
+    #$10 = amount of active monitors (Split screen already selected and functioning)
     #for value in resolution_values:
       #  print(value)
     #Gettin active monitors
-    resolution_values.append(int(check_amount_monitors()))
-    os.system('bash ~/TvPost/Bash_files/Screen_divitions_config/80_20_10.sh {} {} {} {} {} {}'.format(resolution_values[0], resolution_values[1], resolution_values[2], resolution_values[3], resolution_values[4], resolution_values[5]))
+    #####Calculate and round portions###
+    width_pixel_80 = str(normal_round(float(resolution_values[0]) * .8))
+    width_mm_80 = str(normal_round(float(resolution_values[1]) * .8))
+    height_pixel_80 = str(normal_round(float(resolution_values[2]) * .9))
+    height_mm_80 = str(normal_round(float(resolution_values[3]) * .9))
+    
+    valoresPorcentajesCalculados = []
+    valoresPorcentajesCalculados.append(resolution_values[0])
+    valoresPorcentajesCalculados.append(resolution_values[1])
+    valoresPorcentajesCalculados.append(resolution_values[2])
+    valoresPorcentajesCalculados.append(resolution_values[3])
+    valoresPorcentajesCalculados.append(width_pixel_80)
+    valoresPorcentajesCalculados.append(width_mm_80)
+    valoresPorcentajesCalculados.append(height_pixel_80)
+    valoresPorcentajesCalculados.append(height_mm_80)
+    valoresPorcentajesCalculados.append(resolution_values[4])
+    valoresPorcentajesCalculados.append(int(check_amount_monitors()))
+    #print(valoresPorcentajesCalculados)
+    os.system('bash ~/TvPost/Bash_files/Screen_divitions_config/80_20_10.sh {} {} {} {} {} {} {} {} {} {}'.format(
+        valoresPorcentajesCalculados[0],
+        valoresPorcentajesCalculados[1],
+        valoresPorcentajesCalculados[2],
+        valoresPorcentajesCalculados[3],
+        valoresPorcentajesCalculados[4],
+        valoresPorcentajesCalculados[5],
+        valoresPorcentajesCalculados[6],
+        valoresPorcentajesCalculados[7],
+        valoresPorcentajesCalculados[8],
+        valoresPorcentajesCalculados[9])
+              )
     #print(resolution_values)
 
 formato_80_20_10()

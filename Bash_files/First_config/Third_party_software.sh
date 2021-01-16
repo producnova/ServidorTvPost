@@ -26,6 +26,10 @@ sudo apt-get install xscreensaver -y
 echo "------------------------------"
 echo "xscreensaver instalado correctamente"
 echo "------------------------------"
+sudo apt-get install imagemagick -y
+echo "------------------------------"
+echo "imagemagick instalado correctamente"
+echo "------------------------------"
 sudo apt-get install unclutter -y
 echo "------------------------------"
 echo "unclutter instalado correctamente"

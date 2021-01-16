@@ -3,6 +3,7 @@ import os
 import io
 import time
 import threading
+import math
 from PIL import Image
 
 class ClientThread(threading.Thread):
@@ -26,9 +27,23 @@ class ClientThread(threading.Thread):
         return ('Resolución cambiada a: ' + Ancho + 'x' + Alto)
 
     def ModificarLayout(self,ArregloDatos):
+        
         #Leer el archivo de información si existe y obtener el layout.
         #Si al compararlo con el layout que viene desde el móvil son distinos, se cambia
         #la resolucion, sino, se mantiene
+        #Acá tengo que ver si el reloj que viene es igual al que está
+        archivoDatosReprroduccion = "/home/pi/TvPost/Resolutions/datos_reproduccion.txt"
+        relojEnArchivo = ""
+        archivo10 = ""
+        if (os.path.exists(archivoDatosReprroduccion)):
+            with open(archivoDatosReprroduccion) as f:
+                for line in f:
+                    if "relojEnPantalla," in line:
+                        relojEnArchivo = line[line.find('#')-2:line.find('#')]
+                    if "archivo3," in line:
+                        archivo10 = line[line.find(',')+1:].strip()
+                        if archivo10 == "0":
+                            archivo10 = ""
 
         #Datos que se escriben en el archivo para obtenerlos en el equipo móvil
         porcionACambiar = ArregloDatos[2]
@@ -39,15 +54,20 @@ class ClientThread(threading.Thread):
         archivo2 = ArregloDatos[7]
         archivo3 = ArregloDatos[8]
         relojEnPantalla = ArregloDatos[9]
+        relojQueViene = relojEnPantalla[relojEnPantalla.find('#')-2:relojEnPantalla.find('#')]
         layout = ""
         if (ArregloDatos[1] == '100'):
             layout = "1"
         if (ArregloDatos[1] == '5050'):
             layout = "2"
-        if (ArregloDatos[1] == '802010' and relojEnPantalla[:relojEnPantalla.index('#')] == 'off' ):
+        if (ArregloDatos[1] == '802010'):
             layout = "3"
-        if (ArregloDatos[1] == '802010' and relojEnPantalla[:relojEnPantalla.index('#')] == 'on' ):
-            layout = "3reloj"
+                
+            
+        #if (ArregloDatos[1] == '802010' and relojEnPantalla[:relojEnPantalla.index('#')] == 'off' ):
+        #    layout = "3"
+        #if (ArregloDatos[1] == '802010' and relojEnPantalla[:relojEnPantalla.index('#')] == 'on' ):
+        #    layout = "3reloj"
         
         
         if (porcionACambiar == "null"):
@@ -60,13 +80,40 @@ class ClientThread(threading.Thread):
             if layout == "2":
                 porcionACambiar = "mantener2"
             if layout == "3":
-                porcionACambiar = "mantener3"
+                #si no son iguales, cambiar la imagen por la porción 3 correspondiente
+                # y ya no sería mantener 3, sería porción a cambiar 3-3
+                #y el archivo 3 tiene qeu ser el correspondiente a la imagen
+                #pero de la carpeta correspondiente
+                
+                #Si son iguales, se mantiene
+                if relojEnArchivo == relojQueViene:
+                    porcionACambiar = "mantener3"
+                else:
+                #Si el reloj está on, se va abuscar la imagen a la carpeta 10
+                    #Si no hay archivo en el 10, se mantiene todo
+                    if archivo10 == "":
+                        porcionACambiar = "mantener3"
+                    else:
+                        if relojQueViene == "on":
+                            porcionACambiar = "3-3"
+                            archivo10 = archivo10[archivo10.rfind("/") + 1:]
+                            archivo10 = archivo10.replace(' ', '<!-!>')
+                            archivo3 = "/var/www/html/ImagenesPostTv10/{}".format(archivo10)
+
+                        else:
+                            porcionACambiar = "3-3"
+                            archivo10 = archivo10[archivo10.rfind("/") + 1:]
+                            archivo10 = archivo10.replace(' ', '<!-!>')
+                            archivo3 = "/var/www/html/ImagenesPostTv/{}".format(archivo10)
+                        self.CambioLayout(layout, relojQueViene, relojEnArchivo)
+                        
         else:
             #Verifico si se necesita cambiar layout o no
             #solo cambia layout si no se desea mantener algo
             #si se desea mantener, se cambio luego de manipular
             #las apps en el bash opening_apps
-            self.CambioLayout(layout)
+            #Si es porción 3 también hago una apertura previa del archivo anterior existente
+            self.CambioLayout(layout, relojQueViene, relojEnArchivo, relojEnPantalla)
 
         try:
 
@@ -98,13 +145,25 @@ class ClientThread(threading.Thread):
                 listadoArchivosUtilizar.append(archivo2)
                 
             if (porcionACambiar == "3-3"):
+                #Cambia archivo específico para reloj
+                #cuando viene vacío
                 listadoArchivosUtilizar.clear()
+                if relojQueViene == "on":
+                    if 'ImagenesPostTv10' not in archivo3:
+                        archivo3 = archivo3.replace('ImagenesPostTv', 'ImagenesPostTv10')
+                else:
+                    archivo3 = archivo3.replace('ImagenesPostTv10', 'ImagenesPostTv')
                 listadoArchivosUtilizar.append(archivo3)
             
             if (porcionACambiar == "3-4"):
                 listadoArchivosUtilizar.clear()
                 listadoArchivosUtilizar.append(archivo1)
                 listadoArchivosUtilizar.append(archivo2)
+                if relojQueViene == "on":
+                    if 'ImagenesPostTv10' not in archivo3:
+                        archivo3 = archivo3.replace('ImagenesPostTv', 'ImagenesPostTv10')
+                else:
+                    archivo3 = archivo3.replace('ImagenesPostTv10', 'ImagenesPostTv')
                 listadoArchivosUtilizar.append(archivo3)
                 
             if (porcionACambiar == "3-5"):
@@ -115,11 +174,21 @@ class ClientThread(threading.Thread):
             if (porcionACambiar == "3-6"):
                 listadoArchivosUtilizar.clear()
                 listadoArchivosUtilizar.append(archivo2)
+                if relojQueViene == "on":
+                    if 'ImagenesPostTv10' not in archivo3:
+                        archivo3 = archivo3.replace('ImagenesPostTv', 'ImagenesPostTv10')
+                else:
+                    archivo3 = archivo3.replace('ImagenesPostTv10', 'ImagenesPostTv')
                 listadoArchivosUtilizar.append(archivo3)
                 
             if (porcionACambiar == "3-7"):
                 listadoArchivosUtilizar.clear()
                 listadoArchivosUtilizar.append(archivo1)
+                if relojQueViene == "on":
+                    if 'ImagenesPostTv10' not in archivo3:
+                        archivo3 = archivo3.replace('ImagenesPostTv', 'ImagenesPostTv10')
+                else:
+                    archivo3 = archivo3.replace('ImagenesPostTv10', 'ImagenesPostTv')
                 listadoArchivosUtilizar.append(archivo3)
                 
 
@@ -160,6 +229,7 @@ class ClientThread(threading.Thread):
         
         archivo1 = archivo1.replace('<!-!>', ' ')
         archivo2 = archivo2.replace('<!-!>', ' ')
+        archivo3 = archivo3.replace('ImagenesPostTv10', 'ImagenesPostTv')
         archivo3 = archivo3.replace('<!-!>', ' ')
         
         #Crea archivo de datos de reproduccion actual
@@ -195,33 +265,79 @@ class ClientThread(threading.Thread):
         except:
             print('Error al crear archivo datos reproducción')
         
-    def CambioLayout(self,layout):
+    def CambioLayout(self,layout ,relojQueViene, relojEnArchivo, relojCompleto):
     #Cambio de porción solo si es distinto
         direccion_archivo_datos = "/home/pi/TvPost/Resolutions/datos_reproduccion.txt"
         layoutActualEnArchivo = ""
+        archivo3Existente = ""
         if os.path.exists(direccion_archivo_datos):
             with open(direccion_archivo_datos, "rt") as f:
                 for line in f:
                     if "layout," in line:
                         #Asigna valor
                         layoutActualEnArchivo = str(line[line.index(',') + 1:]).strip()
-                        if layout != layoutActualEnArchivo:
-                            try:
-                                if layout == "1":
-                                    if os.system('python3 ~/TvPost/Py_files/Screen_format/Formato_100.py'):
-                                        os.wait()
-                                if layout == "2":
-                                    if os.system('python3 ~/TvPost/Py_files/Screen_format/Formato_50_50.py'):
-                                        os.wait()
-                                if layout == "3":
-                                    if os.system('python3 ~/TvPost/Py_files/Screen_format/Formato_80_20_10.py'):
-                                        os.wait()
-                                if layout == "3reloj":
-                                    if os.system('python3 ~/TvPost/Py_files/Screen_format/Formato_80_20_10_reloj.py'):
-                                        os.wait()
-                            except:
-                                return 'Error al cambiar layout'
-                        break
+                    if "archivo3," in line:
+                        #Asigna valor al archivo
+                        archivo3Existente = "/var/www/html" + str(line[line.index(',') + 1:]).strip()
+
+            try:
+                if layout != layoutActualEnArchivo:
+                    print("Llegaron distintos")
+                    #print("layout" + layout)
+                    #print("layout en archivo" + layoutActualEnArchivo)
+                    if layout == "1":
+                        if os.system('python3 ~/TvPost/Py_files/Screen_format/Formato_100.py'):
+                            os.wait()
+                    if layout == "2":
+                        if os.system('python3 ~/TvPost/Py_files/Screen_format/Formato_50_50.py'):
+                            os.wait()
+                    if layout == "3":
+                        if relojQueViene == "on":
+                            if os.system('python3 ~/TvPost/Py_files/Screen_format/Formato_80_20_10_reloj.py'):
+                                os.wait()
+                        else:
+                            if os.system('python3 ~/TvPost/Py_files/Screen_format/Formato_80_20_10.py'):
+                                os.wait()
+                else:
+                    print("Llegaron iguales")
+                    if layout == "3":
+                        if relojQueViene != relojEnArchivo:
+                            print("Relojes distintos")
+                            #Si son distintos, tengo que:
+                            #1.- Obtener el nombre del archivo 3 y su id para xrander y minimizarlo
+                            #2.- Cerrar el archivo 3
+                            #3.- Cambiar layout
+                            #4.- Abrir archivo 3 en la porción inferior
+                            #Obtengo ID
+                            id3EnArchivo = ""
+                            archivoId = "/home/pi/TvPost/Resolutions/window_id.txt"
+                            if os.path.exists(archivoId):
+                                with open(archivoId, "rt") as f:
+                                    for line in f:
+                                        if "3:" in line:
+                                            #Asigna valor
+                                            id3EnArchivo = str(line[line.index(':') + 1:line.index('-')]).strip()
+                            
+                            #Minimizo archivo 3 por id
+                            os.system('xdotool windowminimize {}'.format(id3EnArchivo))
+                            
+                            if relojQueViene == "on":
+                                print("reloj encendido")
+                                #Se modifica la ruta del archivo para tomar imagen de carpeta 10
+                                archivo3Existente = archivo3Existente.replace('ImagenesPostTv', 'ImagenesPostTv10')
+                                if os.system('python3 ~/TvPost/Py_files/Screen_format/Formato_80_20_10_reloj.py'):
+                                    os.wait()
+                                #os.system("bash ~/TvPost/Bash_files/Apps_interaction/app_opening_functions.sh '{}' '{}' '{}'".format("3-3", archivo3Existente, relojCompleto))
+                            else:
+                                print("reloj apagado")
+                                if os.system('python3 ~/TvPost/Py_files/Screen_format/Formato_80_20_10.py'):
+                                    os.wait()
+                                    
+                            os.system("bash ~/TvPost/Bash_files/Apps_interaction/app_opening_functions.sh '{}' '{}' '{}'".format("3-3", archivo3Existente, relojCompleto))
+
+            except:
+                return 'Error al cambiar layout'
+                        
                 
         else:
             #Si no existe el archivo, se genera una nueva partición de pantalla utilizando
@@ -234,11 +350,12 @@ class ClientThread(threading.Thread):
                     if os.system('python3 ~/TvPost/Py_files/Screen_format/Formato_50_50.py'):
                         os.wait()
                 if layout == "3":
-                    if os.system('python3 ~/TvPost/Py_files/Screen_format/Formato_80_20_10.py'):
-                        os.wait()
-                if layout == "3reloj":
-                                    if os.system('python3 ~/TvPost/Py_files/Screen_format/Formato_80_20_10_reloj.py'):
-                                        os.wait()
+                    if relojQueViene == "on":
+                        if os.system('python3 ~/TvPost/Py_files/Screen_format/Formato_80_20_10_reloj.py'):
+                            os.wait()
+                    else:
+                        if os.system('python3 ~/TvPost/Py_files/Screen_format/Formato_80_20_10.py'):
+                            os.wait()
             except:
                 return 'Error al cambiar layout'
 
@@ -382,6 +499,47 @@ class ClientThread(threading.Thread):
         #print(nombre1, nombre2)
         os.system('cd /var/www/html/VideosPostTv && mv {} {}'.format(nombre1, nombre2))
         return 'Video editado'
+    
+    def normal_round(self, n):
+        if n - math.floor(n) < 0.5:
+            return math.floor(n)
+        return math.ceil(n)
+    
+    #Función que replica la imagen recibida en todos los formatos de
+    #porción. hasta el momento solo se verá en el 10%
+    def ReplicaImagen(self, nombre):
+        #Remuevo caracteres extra
+        nombreConEspacio = nombre.replace('<!-!>', ' ')
+        
+        #Obtengo tamaños de resolución
+        datosSize = "/home/pi/TvPost/Resolutions/base_resolution.txt"
+        ancho_total = 0
+        alto_total = 0
+        ancho_80 = 0
+        alto_10 = 0
+
+        if (os.path.exists(datosSize)):
+            with open(datosSize) as f:
+                for line in f:
+                    if 'Width in pixels:-' in line:
+                        ancho_total = int(line[len('Width in pixels:-'):].strip())
+                    if 'Height in pixels:-' in line:
+                        alto_total = int(line[len('Height in pixels:-'):].strip())
+            
+            #Asigno 80% de ancho y 10 de alto redondeados + 4 para abarcar
+            #márgenes verticales
+            ancho_80 = self.normal_round((ancho_total * .8))
+            alto_10 = self.normal_round((alto_total * .1)) + 4
+           
+        try:
+            #acá tengo que redimensionar la imagen
+            os.system("convert /var/www/html/ImagenesPostTv/'{}' "
+            "-resize {}x{}! /var/www/html/ImagenesPostTv10/'{}'".format(
+                nombreConEspacio, ancho_80, alto_10, nombreConEspacio))
+        except:
+            print("Error!")
+        
+        return 'Imagen replicada'
         
 
     def run(self):
@@ -492,10 +650,18 @@ class ClientThread(threading.Thread):
                 conn.close()
                 return
             
+            elif command == 'TVPOSTREPLICAIMAGEN':
+                respuesta = self.ReplicaImagen(dataMessage[1])
+                conn.send(bytes(respuesta,"UTF-8"))
+                print(respuesta)
+                conn.close()
+                return
+            
         return
 
 host = ""
 port = 5560
+
 
 #Creates a socket
 try:
