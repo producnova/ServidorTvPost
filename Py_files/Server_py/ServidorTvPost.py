@@ -105,7 +105,7 @@ class ClientThread(threading.Thread):
                             archivo10 = archivo10[archivo10.rfind("/") + 1:]
                             archivo10 = archivo10.replace(' ', '<!-!>')
                             archivo3 = "/var/www/html/ImagenesPostTv/{}".format(archivo10)
-                        self.CambioLayout(layout, relojQueViene, relojEnArchivo)
+                        self.CambioLayout(layout, relojQueViene, relojEnArchivo, relojEnPantalla)
                         
         else:
             #Verifico si se necesita cambiar layout o no
@@ -480,6 +480,7 @@ class ClientThread(threading.Thread):
     
     def DelImagenes(self, nombres):
         os.system('cd /var/www/html/ImagenesPostTv && rm -f{}'.format(nombres))
+        os.system('cd /var/www/html/ImagenesPostTv10 && rm -f{}'.format(nombres))
         return 'Imagenes eliminadas'
     
     def EditImagen(self, nombres):
@@ -487,6 +488,7 @@ class ClientThread(threading.Thread):
         nombre2 = nombres[2].replace('<!-!>', ' ')
         #print(nombre1, nombre2)
         os.system('cd /var/www/html/ImagenesPostTv && mv {} {}'.format(nombre1, nombre2))
+        os.system('cd /var/www/html/ImagenesPostTv10 && mv {} {}'.format(nombre1, nombre2))
         return 'Imagen editada'
     
     def DelVideos(self, nombres):
@@ -500,6 +502,7 @@ class ClientThread(threading.Thread):
         os.system('cd /var/www/html/VideosPostTv && mv {} {}'.format(nombre1, nombre2))
         return 'Video editado'
     
+    #Función que redondea números de forma normal
     def normal_round(self, n):
         if n - math.floor(n) < 0.5:
             return math.floor(n)
