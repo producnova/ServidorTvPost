@@ -48,7 +48,7 @@ nueva_id=$( bash ~/TvPost/Bash_files/Apps_interaction/check_new_app_opened.sh )
 #moves the window
 reloj=${nueva_id}
 echo ${reloj}
-xdotool windowmove $reloj 1500 $height_2;
+#xdotool windowmove $reloj 1500 $height_2;
 #wmctrl -i -r $reloj -e 0,1300,$height_2,-1,-1
 echo "x = $width_1"
 echo "y = $height_2"

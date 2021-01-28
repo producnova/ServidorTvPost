@@ -6,14 +6,14 @@ import sys
 from PyQt5 import QtGui
 from PyQt5.QtGui import QFont
 from PyQt5 import QtCore
-from PyQt5.QtCore import QTimer, QTime, Qt, QPoint
+from PyQt5.QtCore import QTimer, QTime, Qt
 
 class Window(QWidget):
     def __init__(self):
         super().__init__()
         self.title = "Reloj"
         #Ancho del 20% de la pantalla
-        self.ancho, self.alto, self.posicionx, self.posiciony = self.ventanasize()
+        self.ancho, self.alto, self.x, self.y = self.ventanasize()
         self.setWindowTitle(self.title)
         
         self.color_fondo = 'white'
@@ -23,15 +23,13 @@ class Window(QWidget):
         if len(sys.argv) == 3 and sys.argv[1] != "" and sys.argv[2] != "":
             self.color_fondo = sys.argv[1]
             self.color_letras = sys.argv[2]
-        
-        #print("Color del fondo en py: {}".format(self.color_fondo))
-        
         #Cambia color del fondo
         self.setStyleSheet("background-color: {}".format(self.color_fondo))
-        self.setGeometry(int(self.posicionx), int(self.posiciony), int(self.ancho), int(self.alto))
+        self.setGeometry(int(self.x), int(self.y), int(self.ancho), int(self.alto))
         #Tamaño de las letras = 44% del alto del reloj
         font_size = int(self.alto) * .44
-        #font_size = 12
+        #Tamaño de las letras de la mitad de la latura
+        #font_size = int(self.alto) // 4
         
         #Contenedor que poseerá el label 
         layout = QVBoxLayout()
@@ -48,20 +46,8 @@ class Window(QWidget):
         #Para ventana sin bordes
         flags = QtCore.Qt.WindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.WindowStaysOnTopHint)
         self.setWindowFlags(flags)
-        #Efecto drag
-        self.oldPos = self.pos()
-        self.show()
-
-        #os.system('xdotool getactivewindow windowmove 830 691')
         
-    
-    def mousePressEvent(self, event):
-        self.oldPos = event.globalPos()
-
-    def mouseMoveEvent(self, event):
-        delta = QPoint (event.globalPos() - self.oldPos)
-        self.move(self.x() + delta.x(), self.y() + delta.y())
-        self.oldPos = event.globalPos()
+        self.show()
         
     def showTime(self):
         current_time = QTime.currentTime()
@@ -81,18 +67,13 @@ class Window(QWidget):
                     (key, val) = line.strip().split(":")
                     if key == "Screen 1":
                         y =  val[str(val).find("x")+1:]
-                        x =  val[:str(val).find("x")]
-                    if key == "Screen 2":
-                        ancho = int(val[:str(val).find("x")])
-                        #y =  val[str(val).find("x")+1:]
-                        #ancho = int(ancho)
                     if key == "Screen 3":
-                        #ancho = val[:str(val).find("x")]
-                        #ancho = int(int(ancho)*0.2)
+                        ancho = val[:str(val).find("x")]
+                        ancho = int(int(ancho)*0.2)
                         alto = val[str(val).find("x")+1:]
-                        #x = int(val[:str(val).find("x")]) - ancho
+                        x = int(val[:str(val).find("x")]) - ancho
             if ancho == "" or alto == "":
-                return "200", "70", 1200, 0
+                return "200", "70", 0, 0
             else:
                 return str(ancho), alto, x, y
                     

@@ -90,8 +90,21 @@ fi
 
 #Si el reloj viene off y hay 3 pantallas, hacer nada
 #If there are 3 active_monitors then deletes them and recreates them
-if [ ${active_monitors} == 3 ]; then
+#if [ ${active_monitors} == 3 ]; then
+#	xrandr --delmonitor ${adapter}~3
+	
+	#Creates the screens
+#	only_10
+	
+	#Calling the function to write the new values in txt
+#	new_screens_values
+	
+#	echo "Cambiada porción 3 "
+#fi
+
+if [ ${active_monitors} == 4 ]; then
 	xrandr --delmonitor ${adapter}~3
+	xrandr --delmonitor ${adapter}~4
 	
 	#Creates the screens
 	only_10
@@ -101,3 +114,4 @@ if [ ${active_monitors} == 3 ]; then
 	
 	echo "Cambiada porción 3 "
 fi
+

@@ -49,3 +49,17 @@ if [ ${active_monitors} == 3 ]; then
 	new_screens_values
 	echo "Cambiado a 5050"
 fi
+
+if [ ${active_monitors} == 4 ]; then
+	xrandr --delmonitor ${adapter}~1
+	xrandr --delmonitor ${adapter}~2
+	xrandr --delmonitor ${adapter}~3
+	xrandr --delmonitor ${adapter}~4
+	
+	#Creates the screens
+	split_screen_50_50
+	
+	#Calling the function to write the new values in txt
+	new_screens_values
+	echo "Cambiado a 5050"
+fi

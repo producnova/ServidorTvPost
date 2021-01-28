@@ -46,3 +46,17 @@ if [ ${active_monitors} == 3 ]; then
 	echo "Cambiado a 100"
 	
 fi
+
+if [ ${active_monitors} == 4 ]; then
+
+	xrandr --delmonitor ${adapter}~1
+	xrandr --delmonitor ${adapter}~2
+	xrandr --delmonitor ${adapter}~3
+	xrandr --delmonitor ${adapter}~4
+	
+	#Calling the function to write the new values in txt
+	new_screens_values
+	
+	echo "Cambiado a 100"
+	
+fi

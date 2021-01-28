@@ -36,11 +36,14 @@ function split_screen_80_20_10_reloj() {
 	xrandr --setmonitor ${adapter}~1 ${width_pixel_80}/${width_mm_80}x${height_pixel_80}/${height_mm_80}+0+0 ${adapter}
 	xrandr --setmonitor ${adapter}~2 ${width_pixel_20}/${width_mm_20}x${height_pixel_80}/${height_mm_80}+${width_pixel_80}+0 none
 	xrandr --setmonitor ${adapter}~3 ${width_pixel_80}/${width_mm_80}x${height_pixel_10}/${height_mm_10}+0+${height_pixel_80} none
+	xrandr --setmonitor ${adapter}~4 ${width_pixel_20}/${width_mm_20}x${height_pixel_10}/${height_mm_10}+${width_pixel_80}+${height_pixel_80} none
 	
 }
 
 function only_10() {
 	xrandr --setmonitor ${adapter}~3 ${width_pixel_80}/${width_mm_80}x${height_pixel_10}/${height_mm_10}+0+${height_pixel_80} none
+	#cuarto monitor solo para reloj
+	xrandr --setmonitor ${adapter}~4 ${width_pixel_20}/${width_mm_20}x${height_pixel_10}/${height_mm_10}+${width_pixel_80}+${height_pixel_80} none
 	
 }
 
@@ -76,6 +79,7 @@ fi
 #If there are 3 active_monitors then deletes them and recreates them
 if [ ${active_monitors} == 3 ]; then
 	xrandr --delmonitor ${adapter}~3
+	xrandr --delmonitor ${adapter}~4
 	
 	#Creates the screens
 	only_10
