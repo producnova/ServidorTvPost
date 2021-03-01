@@ -13,7 +13,7 @@ else
 	echo "*****Eliminando servidor TvPost anterior*****"
 	sudo rm -rf ~/TvPostAnterior
 	echo "*****Moviendo WebSockify*****"
-	sudo cp ~/TvPost/websockify ~/TvPost/noVNC/utils/
+	sudo cp -r ~/TvPost/websockify ~/TvPost/noVNC/utils/
 	echo "*****Instalando Pyrebase (Comunicación Cloud)*****"
 	sudo pip3 install pyrebase
 	echo "*****Configurando Web Server*****"
