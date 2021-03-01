@@ -5,6 +5,8 @@ import time
 import threading
 import math
 from PIL import Image
+#Módulo propio de configuracion firebase
+import FirebaseConfig
 
 class ClientThread(threading.Thread):
     clientAddress = '';
@@ -543,6 +545,38 @@ class ClientThread(threading.Thread):
             print("Error!")
         
         return 'Imagen replicada'
+    
+    #Descarga video desde firebase
+    def DescargaVideoDeCloud(self, pRutEmpresa, pArchivo):
+
+        try:
+            storage = firebase.storage()
+            path_on_cloud = "{}/videos/{}".format(pRutEmpresa, pArchivo)
+            file_in_local_path = "/var/www/html/VideosPostTv/{}".format(pArchivo)
+            
+            #Descarga
+            storage.child(path_on_cloud).download(file_in_local_path)
+            
+        except:
+            print("Error al descargar video")
+        
+        return 'video descargado'
+    
+    #Descarga imagen desde firebase
+    def DescargaImagenDeCloud(self, pRutEmpresa, pArchivo):
+
+        try:
+            storage = firebase.storage()
+            path_on_cloud = "{}/imagenes/{}".format(pRutEmpresa, pArchivo)
+            file_in_local_path = "/var/www/html/ImagenesPostTv/{}".format(pArchivo)
+            
+            #Descarga
+            storage.child(path_on_cloud).download(file_in_local_path)
+            
+        except:
+            print("Error al descargar imagen")
+        
+        return 'imagen descargada'
         
 
     def run(self):
@@ -660,11 +694,26 @@ class ClientThread(threading.Thread):
                 conn.close()
                 return
             
+            elif command == 'TVPOSTGETVIDEOFROMCLOUD':
+                respuesta = self.DescargaVideoDeCloud(dataMessage[1], dataMessage[2])
+                conn.send(bytes(respuesta,"UTF-8"))
+                print(respuesta)
+                conn.close()
+                return
+            
+            elif command == 'TVPOSTGETIMAGENFROMCLOUD':
+                respuesta = self.DescargaImagenDeCloud(dataMessage[1], dataMessage[2])
+                conn.send(bytes(respuesta,"UTF-8"))
+                print(respuesta)
+                conn.close()
+                return
+            
         return
 
 host = ""
 port = 5560
-
+#Inicializa Firebase
+firebase = FirebaseConfig.GetInitialization()
 
 #Creates a socket
 try:
