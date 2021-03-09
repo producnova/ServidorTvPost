@@ -534,7 +534,7 @@ class ClientThread(threading.Thread):
             #Asigno 80% de ancho y 10 de alto redondeados + 4 para abarcar
             #márgenes verticales
             ancho_80 = self.normal_round((ancho_total * .8))
-            alto_10 = self.normal_round((alto_total * .1)) + 4
+            alto_10 = self.normal_round((alto_total * .1))
            
         try:
             #acá tengo que redimensionar la imagen
@@ -572,6 +572,9 @@ class ClientThread(threading.Thread):
             
             #Descarga
             storage.child(path_on_cloud).download(file_in_local_path)
+            
+            #Replicar imagen en 10%
+            self.ReplicaImagen(pArchivo)
             
         except:
             print("Error al descargar imagen")
