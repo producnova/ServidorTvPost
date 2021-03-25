@@ -8,11 +8,22 @@ from PIL import Image
 #Módulo propio de configuracion firebase
 import FirebaseConfig
 
+firebase = FirebaseConfig.GetInitialization()
+auth = firebase.auth()
+
+
+
+
 class ClientThread(threading.Thread):
     clientAddress = '';
     conn = '';
     def __init__(self, address, clientSocket):
         try:
+            #Al crear el hilo se identifica
+            user = auth.sign_in_with_email_and_password("producnova@gmail.com", "*ServerProd1")
+
+            user = auth.refresh(user['refreshToken'])
+                        
             threading.Thread.__init__(self, name="hiloNuevo", target=ClientThread.run)
             self.conn = clientSocket
             self.clientAddress = address
@@ -550,6 +561,7 @@ class ClientThread(threading.Thread):
     def DescargaVideoDeCloud(self, pRutEmpresa, pArchivo):
 
         try:
+            user = auth.sign_in_with_email_and_password("producnova@gmail.com", "*ServerProd1")
             storage = firebase.storage()
             path_on_cloud = "{}/videos/{}".format(pRutEmpresa, pArchivo)
             file_in_local_path = "/var/www/html/VideosPostTv/{}".format(pArchivo)
@@ -566,9 +578,19 @@ class ClientThread(threading.Thread):
     def DescargaImagenDeCloud(self, pRutEmpresa, pArchivo):
 
         try:
+            #Al crear el hilo se identifica
+            user = auth.sign_in_with_email_and_password("producnova@gmail.com", "*ServerProd1")
+            #user = auth.refresh(user['refreshToken'])
+            #print('*****USUARIO****')
+            #print(user)
+            #print(pRutEmpresa)
+            #print(pArchivo)
+            
             storage = firebase.storage()
             path_on_cloud = "{}/imagenes/{}".format(pRutEmpresa, pArchivo)
             file_in_local_path = "/var/www/html/ImagenesPostTv/{}".format(pArchivo)
+            #url = storage.child(path_on_cloud).get_url(user['localId'])
+            #print(url)
             
             #Descarga
             storage.child(path_on_cloud).download(file_in_local_path)
@@ -576,8 +598,9 @@ class ClientThread(threading.Thread):
             #Replicar imagen en 10%
             self.ReplicaImagen(pArchivo)
             
-        except:
+        except Exception as e: 
             print("Error al descargar imagen")
+            print(e)
         
         return 'imagen descargada'
         
@@ -716,7 +739,7 @@ class ClientThread(threading.Thread):
 host = ""
 port = 5560
 #Inicializa Firebase
-firebase = FirebaseConfig.GetInitialization()
+
 
 #Creates a socket
 try:
